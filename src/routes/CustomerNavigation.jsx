@@ -84,7 +84,6 @@ const HomeTab = () => {
 };
 
 const DrawerNavigation = () => {
-
   const Drawer = createDrawerNavigator();
   return (
     <Drawer.Navigator

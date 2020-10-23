@@ -72,19 +72,17 @@ export default SideBar = () => {
             <Text>Página Inicial</Text>
           </RowView>
         </RectButton>
-        {role !== 'ROLE_CLIENTE' ? null : (
-          <RectButton
-            style={styles.btn}
-            onPress={() => {
-              navigation.navigate('freteCreate');
-            }}
-          >
-            <RowView>
-              <MaterialCommunityIcons name="plus" style={styles.icons} />
-              <Text>Solicitar Frete</Text>
-            </RowView>
-          </RectButton>
-        )}
+        <RectButton
+          style={styles.btn}
+          onPress={() => {
+            navigation.navigate('freteCreate');
+          }}
+        >
+          <RowView>
+            <MaterialCommunityIcons name="plus" style={styles.icons} />
+            <Text>Solicitar Frete</Text>
+          </RowView>
+        </RectButton>
 
         <RectButton
           style={styles.btn}
@@ -100,19 +98,7 @@ export default SideBar = () => {
             <Text>Meu Perfil</Text>
           </RowView>
         </RectButton>
-        {role !== 'ROLE_AUTONOMO' ? null : (
-          <RectButton
-            style={styles.btn}
-            onPress={() => {
-              navigation.navigate('carDetails');
-            }}
-          >
-            <RowView>
-              <MaterialCommunityIcons name="car-back" style={styles.icons} />
-              <Text>Meu Automóvel</Text>
-            </RowView>
-          </RectButton>
-        )}
+
         <RectButton
           style={styles.btn}
           onPress={() => {

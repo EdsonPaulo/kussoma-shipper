@@ -375,7 +375,7 @@ const RegisterScreen = () => {
             Kussoma
           </Text>
           <Text color={colors.textDark} marginVertical="0">
-            para {role === 'ROLE_CLIENTE' ? 'cliente' : 'motorista'}
+            para cliente
           </Text>
         </View>
         <View />
@@ -490,8 +490,8 @@ const RegisterScreen = () => {
                 marginVertical="5px"
                 fontSize="14px"
               >
-                Parabéns {userData.name || 'Edson Gregório'}, a sua conta foi
-                criada com sucesso. Seja bem vindo ao Kussoma!
+                Parabéns {userData.name}, a sua conta foi criada com sucesso.
+                Seja bem vindo ao Kussoma!
               </Text>
             </View>
           </ModalView>
