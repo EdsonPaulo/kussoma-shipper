@@ -7,7 +7,6 @@ import { Platform } from 'react-native';
 import AuthContext from '../contexts/auth/auth-context';
 import Splash from '../screens/Auth/Splash';
 import AuthNavigation from './AuthNavigation';
-import CarrierNavigation from './CarrierNavigation';
 import CustomerNavigation from './CustomerNavigation';
 
 export default index = () => {
@@ -56,11 +55,7 @@ export default index = () => {
           <RootStack.Navigator screenOptions={{ headerShown: false }}>
             {isLoading ? (
               <RootStack.Screen name="splash" component={Splash} />
-            ) : !isLogged ? (
-              <RootStack.Screen name="auth" component={AuthNavigation} />
-            ) : role === 'ROLE_AUTONOMO' ? (
-              <RootStack.Screen name="carrier" component={CarrierNavigation} />
-            ) : role === 'ROLE_CLIENTE' ? (
+            ) : isLogged ? (
               <RootStack.Screen
                 name="customer"
                 component={CustomerNavigation}

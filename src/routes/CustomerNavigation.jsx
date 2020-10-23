@@ -3,9 +3,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
 import { default as React, useContext } from 'react';
 import { HeaderBar, HomeTabBar, SideBar } from '../components';
-import authContext from '../contexts/auth/auth-context';
 import {
-  CarDetails,
   FreteCreate,
   FreteDetails,
   Fretes,
@@ -86,7 +84,6 @@ const HomeTab = () => {
 };
 
 const DrawerNavigation = () => {
-  const { role } = useContext(authContext);
 
   const Drawer = createDrawerNavigator();
   return (
@@ -124,11 +121,6 @@ const DrawerNavigation = () => {
         name="solicitacaoDetails"
         options={{ title: 'Detalhes da Solicitação' }}
         component={SolicitacaoDetails}
-      />
-      <Drawer.Screen
-        name="carDetails"
-        options={{ title: 'Meu Automóvel' }}
-        component={CarDetails}
       />
     </Drawer.Navigator>
   );

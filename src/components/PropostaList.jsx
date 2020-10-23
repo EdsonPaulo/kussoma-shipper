@@ -37,8 +37,7 @@ const PropostaList = () => {
     if (loading || refreshing) return;
     setLoading(true);
     try {
-      const API_URL_ENDPOINT =
-        role === 'ROLE_CLIENTE' ? `/propostas_cliente` : `/propostas_entidade`;
+      const API_URL_ENDPOINT = `/propostas_cliente`;
 
       const response = await api(token).get(API_URL_ENDPOINT);
       console.log('Lista de Propostas');
@@ -46,9 +45,7 @@ const PropostaList = () => {
       if (response.data && isMounted) {
         setLoading(false);
         setRefreshing(false);
-        setPropostas(
-          role === 'ROLE_CLIENTE' ? response.data?.propostas : response.data,
-        );
+        setPropostas(response.data?.propostas);
       }
     } catch (error) {
       console.log(error + ' ==> erro');
@@ -58,105 +55,6 @@ const PropostaList = () => {
         setRefreshing(false);
       }
     }
-  };
-
-  const checkout = solicitacaoId => {
-    Alert.alert(
-      'Começar Frete',
-      'Deseja começar o trablho para esse frete?',
-      [
-        { text: 'Não', style: 'cancel' },
-        {
-          text: 'Sim',
-          onPress: async () => {
-            const data = {
-              solicitacaoId: solicitacaoId,
-              motoristaId: 73,
-              automovelId: 50,
-            };
-            console.log(`/frete`, { ...data });
-            //return
-            try {
-              setProcessing(true);
-              const response = await api(token).post(`/frete`, { ...data });
-              if (response.data) {
-                console.log('Frete negociado!');
-                getPropostaList();
-              }
-            } catch (error) {
-              console.log(error.response?.data);
-            } finally {
-              setProcessing(false);
-            }
-          },
-        },
-      ],
-      { cancelable: true },
-    );
-  };
-
-  const cancelarProposta = solicitacaoId => {
-    Alert.alert(
-      'Cancelar Proposta',
-      'Tem certeza que quer cancelar a sua proposta?',
-      [
-        { text: 'Não', style: 'cancel' },
-        {
-          text: 'Sim',
-          onPress: async () => {
-            console.log(`/cancelar_proposta/${solicitacaoId}`);
-            // return
-            try {
-              setProcessing(true);
-              const response = await api(token).post(
-                `/cancelar_proposta/${solicitacaoId}`,
-              );
-              if (response.data) {
-                console.log('Proposta cancelada!');
-                getPropostaList();
-              }
-            } catch (error) {
-              console.log(error);
-            } finally {
-              setProcessing(false);
-            }
-          },
-        },
-      ],
-      { cancelable: true },
-    );
-  };
-
-  const rejeitarProposta = solicitacaoId => {
-    Alert.alert(
-      'Cancelar Proposta',
-      'Tem certeza que quer cancelar a sua proposta?',
-      [
-        { text: 'Não', style: 'cancel' },
-        {
-          text: 'Sim',
-          onPress: async () => {
-            console.log(`/cancelar_proposta/${solicitacaoId}`);
-            // return
-            try {
-              setProcessing(true);
-              const response = await api(token).post(
-                `/cancelar_proposta/${solicitacaoId}`,
-              );
-              if (response.data) {
-                console.log('Proposta cancelada!');
-                getPropostaList();
-              }
-            } catch (error) {
-              console.log(error);
-            } finally {
-              setProcessing(false);
-            }
-          },
-        },
-      ],
-      { cancelable: true },
-    );
   };
 
   const aceitarProposta = (solicitacaoId, proposta) => {
@@ -188,75 +86,6 @@ const PropostaList = () => {
       { cancelable: true },
     );
   };
-
-  const PropostaCard = proposta => {
-    return (
-      <Card style={{ padding: 5, elevation: 5, marginBottom: 15 }}>
-        <Card.Content>
-          <RowView justifyContent="space-between">
-            <Chip
-              style={{
-                backgroundColor: proposta.estadoProposta ? 'green' : '#eee',
-              }}
-              textStyle={{
-                color: proposta.estadoProposta
-                  ? colors.textLight
-                  : colors.textDark,
-              }}
-            >
-              {proposta.estadoProposta ? 'Aceite' : 'Pendente'}
-            </Chip>
-            <Text fontSize="20px" color={colors.dark} bold>
-              {convertMoney(proposta.valor)}
-            </Text>
-          </RowView>
-
-          <View style={{ alignItems: 'center' }}>
-            <Text fontSize="16px" color={colors.grayDark}>
-              Cliente
-            </Text>
-            <Text fontSize="18px" bold>
-              {proposta?.cliente?.nome}
-            </Text>
-          </View>
-
-          <View style={{ marginVertical: 5, alignItems: 'center' }}>
-            <Text fontSize="16px" color={colors.grayDark}>
-              Referência da Solicitação
-            </Text>
-            <Text fontSize="18px" bold>{`S0${proposta.solicitacaoId}`}</Text>
-          </View>
-        </Card.Content>
-
-        <Card.Actions style={{ justifyContent: 'space-between' }}>
-          {!proposta.estadoProposta ? (
-            <Text fontSize="17px" color={colors.grayDark} bold>
-              {convertDateDM(proposta.dataProposta)},{' '}
-              {convertDateHM(proposta.dataProposta)}
-            </Text>
-          ) : (
-            <Button
-              icon="truck"
-              color="white"
-              style={{ backgroundColor: colors.primary, color: 'white' }}
-              onPress={() => checkout(proposta?.solicitacaoId)}
-            >
-              Começar Trabalho
-            </Button>
-          )}
-          <Button
-            icon="close"
-            color="white"
-            style={{ backgroundColor: colors.alert, color: 'white' }}
-            onPress={() => cancelarProposta(proposta?.solicitacaoId)}
-          >
-            Cancelar
-          </Button>
-        </Card.Actions>
-      </Card>
-    );
-  };
-
   const PropostaClienteCard = propostasSolicitacao => (
     <List.Accordion
       title={`S0${propostasSolicitacao?.id}`}
@@ -336,34 +165,11 @@ const PropostaList = () => {
   if (propostas.length == 0) {
     return (
       <Container style={{ alignItems: 'center' }}>
-        {role === 'ROLE_CLIENTE' ? (
-          <>
-            <Icon name="inbox" size={40} color={colors.grayDark} />
-            <Text fontSize="18px" textAlign="center" color={colors.grayDark}>
-              Nenhuma proposta para as suas solicitações!
-            </Text>
-          </>
-        ) : (
-          <>
-            <Text fontSize="16px" style={{}} color={colors.grayDark}>
-              Não tem nenhuma proposta pendente!
-            </Text>
-            <Text
-              fontSize="16px"
-              style={{ marginBottom: 15 }}
-              color={colors.grayDark}
-            >
-              Veja as recentes solicitações e faça proposta
-            </Text>
+        <Icon name="inbox" size={40} color={colors.grayDark} />
+        <Text fontSize="18px" textAlign="center" color={colors.grayDark}>
+          Nenhuma proposta para as suas solicitações!
+        </Text>
 
-            <Button
-              mode="contained"
-              onPress={() => navigation.navigate('solicitacoes')}
-            >
-              Ver Trabalhos
-            </Button>
-          </>
-        )}
         <Icon
           style={{ position: 'absolute', top: 10, right: 10 }}
           name="refresh"
@@ -380,11 +186,7 @@ const PropostaList = () => {
       <FlatList
         data={propostas}
         contentContainerStyle={{ padding: 15 }}
-        renderItem={({ item }) =>
-          role === 'ROLE_CLIENTE'
-            ? PropostaClienteCard({ ...item })
-            : PropostaCard({ ...item })
-        }
+        renderItem={({ item }) => PropostaClienteCard({ ...item })}
         keyExtractor={(item, index) => index.toString()}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
