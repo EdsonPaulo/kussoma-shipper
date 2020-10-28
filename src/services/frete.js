@@ -1,6 +1,6 @@
 import API from './api';
 
-const getFretes = async () => {
+export const getFretes = async () => {
   try {
     const response = await API.get('/frete');
     console.log(response.data);
@@ -9,5 +9,3 @@ const getFretes = async () => {
     console.log('ERRO: ', e);
   }
 };
-
-export { getFretes };
